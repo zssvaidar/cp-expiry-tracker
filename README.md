@@ -31,3 +31,19 @@ flutter build web            # production build into build/web
 - `test/` – widget and unit tests
 - `web/` – web host page and PWA manifest
 - `android/` – Android host project
+
+## Ephemeral EC2 smoke test
+
+`scripts/ec2-ephemeral.sh` launches a throwaway EC2 instance, keeps it for
+4 minutes, then terminates it. It is meant for testing the deployer.
+
+```sh
+AWS_REGION=us-east-1 scripts/ec2-ephemeral.sh
+```
+
+It needs AWS CLI v2 and credentials. Defaults: `t3.micro`, latest Amazon
+Linux 2023, default VPC. You can override them with `INSTANCE_TYPE`,
+`AMI_ID`, `SUBNET_ID`, `SECURITY_GROUP_ID` and `LIFETIME_SECONDS`.
+The script terminates the instance itself, including on Ctrl-C or error.
+As a backup, the instance also shuts itself down after the lifetime with
+shutdown behaviour `terminate`, so it is removed even if the script dies.
